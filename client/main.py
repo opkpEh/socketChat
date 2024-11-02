@@ -23,7 +23,7 @@ def receive_message(client_socket):
         server_message = response_data['message']
 
         print(f"\r{server_username}: {server_message}")
-        print(f"{client_username}: ", end='', flush=True)
+        print(f"> ", end='', flush=True)
 
         return True
 
