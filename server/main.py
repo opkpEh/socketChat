@@ -1,61 +1,90 @@
 import socket
 import json
+import threading
 
 HOST = '127.0.0.1'
 PORT = 8080
 
-server_username = input("Enter a username: ")
+def receive_messages(client_socket):
+    while True:
+        try:
+            message_length_bytes = client_socket.recv(4)
+            if not message_length_bytes:
+                break
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
-    server_socket.bind((HOST, PORT))
-    server_socket.listen()
-    print(f"Server listening on {HOST}:{PORT}")
+            message_length = int.from_bytes(message_length_bytes, 'big')
 
-    client_socket, client_address = server_socket.accept()
-
-    with client_socket:
-        print(f"Connected to {client_address}")
-        while True:
-            try:
-                message_length_bytes = client_socket.recv(4)
-                if not message_length_bytes:
+            #Receive the full message
+            client_data = b''
+            while len(client_data) < message_length:
+                remaining_bytes = message_length- len(client_data)
+                chunk = client_socket.recv(min(remaining_bytes, 1024))
+                if not chunk:
                     break
+                client_data += chunk
 
-                message_length = int.from_bytes(message_length_bytes, 'big')
+            #Parsing and print the message
+            data = json.loads(client_data.decode())
+            username = data['username']
+            message = data['message']
+            print(f"\r{username}: {message}")
+            print("> ", end='', flush=True)
 
-                client_data = b''
-                while len(client_data) < message_length:
-                    chunk = client_socket.recv(min(message_length - len(client_data), 1024))
-                    if not chunk:
-                        break
-                    client_data += chunk
+        except Exception as e:
+            print(f"\nError receiving message: {e}")
+            break
 
-                data = json.loads(client_data.decode())
-                username = data['username']
-                message = data['message']
+    client_socket.close()
 
-                print(f"{username}> {message}")
 
-                server_message = input("> ")
+def send_messages(client_socket, username):
+    while True:
+        try:
+            message = input("> ")
 
-                response_data= {
-                    "username": server_username,
-                    "message": server_message
-                }
+            data = {
+                "username": username,
+                "message": message
+            }
 
-                response_bytes_json = json.dumps(response_data).encode()
+            json_data = json.dumps(data).encode()
 
-                response_length = len(response_bytes_json)
-                client_socket.send(response_length.to_bytes(4, 'big'))
+            # Send length then message
+            message_length = len(json_data)
+            client_socket.send(message_length.to_bytes(4, 'big'))
+            client_socket.send(json_data)
 
-                client_socket.sendall(response_bytes_json)
+        except Exception as e:
+            print(f"\nError sending message: {e}")
+            break
 
-            except KeyboardInterrupt:
-                print("\nServer shutting down...")
-                break
-            except json.JSONDecodeError:
-                print("Error: Received invalid JSON data")
-                break
-            except Exception as e:
-                print(f"Error: {e}")
-                break
+    client_socket.close()
+
+
+def main():
+    global server_username
+    server_username = input("Enter server username: ")
+
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
+        server_socket.bind((HOST, PORT))
+        server_socket.listen()
+        print(f"Server listening on {HOST}:{PORT}")
+
+        client_socket, client_address = server_socket.accept()
+        print(f"Connected to {client_address}")
+
+        # Create threads for sending and receiving
+        receive_thread = threading.Thread(target=receive_messages, args=(client_socket,))
+        send_thread = threading.Thread(target=send_messages, args=(client_socket, server_username))
+
+        # Start both threads
+        receive_thread.start()
+        send_thread.start()
+
+        #waiting for both threads to complete
+        receive_thread.join()
+        send_thread.join()
+
+
+if __name__ == "__main__":
+    main()

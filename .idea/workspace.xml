@@ -84,7 +84,7 @@
       <workItem from="1730542793729" duration="651000" />
       <workItem from="1730555282392" duration="2261000" />
       <workItem from="1730560398107" duration="101000" />
-      <workItem from="1730562629164" duration="1813000" />
+      <workItem from="1730562629164" duration="3941000" />
     </task>
     <servers />
   </component>
@@ -92,6 +92,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/socketChat$main.coverage" NAME="main Coverage Results" MODIFIED="1730564361143" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/client" />
+    <SUITE FILE_PATH="coverage/socketChat$main.coverage" NAME="main Coverage Results" MODIFIED="1730566438240" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/client" />
   </component>
 </project>
