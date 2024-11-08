@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d0422ae3-3633-4b39-aee4-05221e47fc26" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/client/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/main.py" afterDir="false" />
@@ -36,6 +37,10 @@
     &quot;accountId&quot;: &quot;7ad9a738-a7bf-4786-9830-fdc6b46fb3dc&quot;
   }
 }</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/client/main.py" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/server/main.py" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 1
 }</component>
@@ -89,7 +94,11 @@
       <workItem from="1730614891219" duration="246000" />
       <workItem from="1730635427897" duration="950000" />
       <workItem from="1730657685392" duration="1224000" />
-      <workItem from="1730894488449" duration="4439000" />
+      <workItem from="1730894488449" duration="5785000" />
+      <workItem from="1730904105814" duration="866000" />
+      <workItem from="1730908158744" duration="2268000" />
+      <workItem from="1730981386963" duration="688000" />
+      <workItem from="1731100141001" duration="1359000" />
     </task>
     <servers />
   </component>
@@ -97,6 +106,6 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/socketChat$main.coverage" NAME="main Coverage Results" MODIFIED="1730898506103" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/client" />
+    <SUITE FILE_PATH="coverage/socketChat$main.coverage" NAME="main Coverage Results" MODIFIED="1731101388155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/client" />
   </component>
 </project>

@@ -1,9 +1,8 @@
 import socket
 import json
-import threading
 import sys
-import time
-
+import threading
+import readline
 
 class ChatClient:
     def __init__(self, host: str, port: int):
@@ -14,6 +13,19 @@ class ChatClient:
         self.connected = False
         self.receive_thread = None
         self.send_thread = None
+        self.current_input= ""
+        self.lock = threading.Lock()
+
+        readline.parse_and_bind('tab: complete')
+        readline.set_completer(lambda text, state: None)
+
+    def clear_current_line(self):
+        sys.stdout.write('\r\033[K')
+        sys.stdout.flush()
+
+    def remake_input_line(self):
+        sys.stdout.write(f'\r> {self.current_input}')
+        sys.stdout.flush()
 
     def connect(self):
         try:
@@ -47,14 +59,16 @@ class ChatClient:
 
             message = json.loads(message_data.decode())
 
-            if message.get('type') == 'system':
-                print(f"\r\033[K[System] {message['message']}")
-            else:
-                sender = message.get('username', 'Unknown')
-                content = message.get('message', '')
-                print(f"\r\033[K{sender}: {content}")
+            with self.lock:
+                self.clear_current_line()
+                if message.get('type') == 'system':
+                    print(f"[System] {message['message']}")
+                else:
+                    sender = message.get('username', 'Unknown')
+                    content = message.get('message', '')
+                    print(f"{sender}: {content}")
+                self.remake_input_line()
 
-            print("> ", end='', flush=True)
             return True
 
         except ConnectionError as e:
@@ -76,9 +90,9 @@ class ChatClient:
                 return False
 
             data = {
-                "type": "message",
-                "username": self.username,
-                "message": message
+                    "type": "message",
+                    "username": self.username,
+                    "message": message
             }
             json_data = json.dumps(data).encode()
 
@@ -101,9 +115,11 @@ class ChatClient:
     def send_loop(self):
         while self.connected:
             try:
-                message = input("> ")
-                if not self.send_message(message):
-                    break
+                self.current_input = input("> ")
+                with self.lock:
+                    if not self.send_message(self.current_input):
+                        break
+                self.current_input = ""
             except KeyboardInterrupt:
                 print("\nExiting...")
                 self.connected = False
@@ -127,9 +143,9 @@ class ChatClient:
         self.username = input("Enter your username: ")
 
         join_message = {
-            "type": "join",
-            "username": self.username,
-            "message": "joined the chat"
+                "type": "join",
+                "username": self.username,
+                "message": "joined the chat"
         }
         json_data = json.dumps(join_message).encode()
         self.socket.send(len(json_data).to_bytes(4, 'big'))
@@ -153,7 +169,7 @@ class ChatClient:
 
 
 def main():
-    client = ChatClient('10.20.29.33', 8080)
+    client = ChatClient('127.0.0.1', 8080)
     client.start()
 
 
