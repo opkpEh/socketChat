@@ -3,8 +3,20 @@ import json
 import sys
 import threading
 import readline
+import random
 
 class ChatClient:
+    COLORS = {
+        'red': '\033[91m',
+        'blue': '\033[94m',
+        'green': '\033[92m',
+        'yellow': '\033[93m',
+        'white': '\033[97m',
+        'purple': '\033[95m',
+        'cyan': '\033[96m'
+    }
+    RESET = '\033[0m'
+
     def __init__(self, host: str, port: int):
         self.host = host
         self.port = port
@@ -13,11 +25,13 @@ class ChatClient:
         self.connected = False
         self.receive_thread = None
         self.send_thread = None
-        self.current_input= ""
+        self.current_input = ""
         self.lock = threading.Lock()
+        self.color = random.choice(list(self.COLORS.values()))
 
         readline.parse_and_bind('tab: complete')
         readline.set_completer(lambda text, state: None)
+
 
     def clear_current_line(self):
         sys.stdout.write('\r\033[K')
@@ -66,7 +80,8 @@ class ChatClient:
                 else:
                     sender = message.get('username', 'Unknown')
                     content = message.get('message', '')
-                    print(f"{sender}: {content}")
+                    sender_color = message.get('color', self.COLORS['white'])
+                    print(f"{sender_color}{sender}: {content}{self.RESET}")
                 self.remake_input_line()
 
             return True
@@ -90,9 +105,10 @@ class ChatClient:
                 return False
 
             data = {
-                    "type": "message",
-                    "username": self.username,
-                    "message": message
+                "type": "message",
+                "username": self.username,
+                "message": message,
+                "color": self.color
             }
             json_data = json.dumps(data).encode()
 
@@ -143,9 +159,10 @@ class ChatClient:
         self.username = input("Enter your username: ")
 
         join_message = {
-                "type": "join",
-                "username": self.username,
-                "message": "joined the chat"
+            "type": "join",
+            "username": self.username,
+            "message": "joined the chat",
+            "color": self.color
         }
         json_data = json.dumps(join_message).encode()
         self.socket.send(len(json_data).to_bytes(4, 'big'))
