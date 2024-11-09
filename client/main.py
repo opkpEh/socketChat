@@ -63,7 +63,7 @@ class ChatClient:
         help_text = """
 Available Commands:
 /help     - Shows help messages
-/quit     - Ceave chat
+/quit     - Leave chat
 /users    - All active users
 /clear    - Clear the screen
 /color    - Change your color 
